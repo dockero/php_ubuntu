@@ -1,0 +1,18 @@
+sudo: required
+services:
+  - docker
+
+script: 
+    - cp .env.example .env
+    - ./scripts/modify_php_version.sh 7.3.12
+    - docker-compose build
+    - ./scripts/modify_php_version.sh 7.4.0
+    - docker-compose build
+
+after_success:
+    - 
+
+branches:
+    only:
+    - travis
+    - master
