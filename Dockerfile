@@ -9,7 +9,8 @@ RUN apt-get update
 RUN apt-get -y install \
         libcurl4-openssl-dev \
         libxml2-dev \
-        libsqlite3-dev
+        libsqlite3-dev \
+        libssl-dev
 
 # install pressure test tools
 RUN apt-get -y install \
@@ -29,16 +30,8 @@ RUN apt-get -y install \
         valgrind \
         gettext \
         git \
-        curl
-
-# install openssl-dev 1.1.1
-RUN cd /tmp \
-        && git clone https://gitee.com/codinghuang/openssl.git \
-        && cd openssl \
-        && git checkout OpenSSL_1_1_1c \
-        && ./config --prefix=/usr/local/openssl --openssldir=/usr/local/openssl shared zlib \
-        && make > /dev/null \
-        && make install > /dev/null
+        curl \
+        openssl
 
 RUN apt-get -y install \
         cmake
@@ -216,4 +209,6 @@ RUN echo "export http_proxys=${HTTPS_PROXY}" >> /etc/profile
 
 WORKDIR /root/codeDir
 
-CMD ["/usr/sbin/sshd", "-D"]
+RUN mkdir -p /var/run/sshd
+
+CMD ["/etc/init.d/ssh", "start"]
